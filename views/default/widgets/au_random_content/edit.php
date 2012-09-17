@@ -10,11 +10,11 @@ foreach ($registered_entities['object'] as $subtype) {
   $options_values[elgg_echo($subtype)] = $subtype;
 }
 
+ksort($options_values, SORT_NATURAL | SORT_FLAG_CASE);
+
 echo elgg_echo('au_random_content:show:types') . "<br>";
 
-foreach ($options_values as $label => $subtype) {
-  echo "<div>";
-  
+foreach ($options_values as $label => $subtype) {  
   $options = array(
       'name' => "params[subtype_$subtype]",
       'value' => 1
@@ -27,8 +27,19 @@ foreach ($options_values as $label => $subtype) {
   
   echo elgg_view('input/checkbox', $options);
   echo $label;
-  echo "</div>";
+  echo "<br>";
 }
+
+
+// how recent should the items be?
+echo "<br>";
+echo elgg_echo('au_random_content:mintime') . '<br>';
+echo elgg_view('input/text', array(
+    'name' => 'params[mintime]',
+    'value' => $widget->mintime ? $widget->mintime : '-1 year'
+));
+
+echo "<br>";
 
 
 // select how many to show

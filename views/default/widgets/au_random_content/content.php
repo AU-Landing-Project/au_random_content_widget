@@ -18,19 +18,43 @@ if (!count($subtypes)) {
   return;
 }
 
+$created_time_lower = strtotime($widget->mintime) ? strtotime($widget->mintime) : strtotime('-1 year');
+
+// note that two queries here is more efficient than using order_by RAND()
 $options = array(
     'types' => array('object'),
     'subtypes' => $subtypes,
-    'limit' => $widget->numdisplay ? $widget->numdisplay: 5,
-    'order_by' => 'RAND()',
-    'full_view' => false,
-    'pagination' => false
+    'created_time_lower' => $created_time_lower,
+    'limit' => 0,
+    'callback' => FALSE
 );
 
-$content = elgg_list_entities($options);
+$results = elgg_get_entities($options);
+if (!is_array($results)) {
+  $results = array();
+}
 
-if ($content) {
-  echo $content;
+$num = $widget->numdisplay ? $widget->numdisplay : 5;
+
+// make sure we don't try to get more than is possible
+while ($num > count($results)) {
+  $num--;
+}
+
+if ($num > 0) {
+  $keys = array_rand($results, $num);
+  $guids = array();
+  foreach ($keys as $key) {
+    $guids[] = $results[$key]->guid;
+  }
+  
+  echo elgg_list_entities(array(
+      'types' => array('object'),
+      'subtypes' => $subtypes,
+      'guids' => $guids,
+      'full_view' => FALSE,
+      'pagination' => FALSE,
+  ));
 }
 else {
   echo elgg_echo('au_random_content:no:results');
