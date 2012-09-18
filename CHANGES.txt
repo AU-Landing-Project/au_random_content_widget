@@ -2,5 +2,9 @@
 
 x.x:
 
-1.0 ():
-  - initial release
+1.1 (09/18/2012):
+- Fixes a bug when number of results == 1
+
+
+1.0 (09/17/2012):
+- initial release
