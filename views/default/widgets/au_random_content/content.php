@@ -43,6 +43,10 @@ while ($num > count($results)) {
 
 if ($num > 0) {
   $keys = array_rand($results, $num);
+  if (!is_array($keys)) {
+    $keys = array($keys);
+  }
+  
   $guids = array();
   foreach ($keys as $key) {
     $guids[] = $results[$key]->guid;
